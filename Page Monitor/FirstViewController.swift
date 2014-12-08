@@ -13,10 +13,15 @@ var pages:[String] = []
 class FirstViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet var pagesTable:UITableView? // Manually created referencing outlet
-    
+    var refreshControl:UIRefreshControl!  // An optional variable
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+        pagesTable?.addSubview(refreshControl)
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,11 +41,14 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         return cell
     }
     
-    func refresh() {
+    func refresh(sender: AnyObject) {
+        println("Refresh works!")
         for page in pages { // Iterate and check page changes. Code inspector goes in here.
             var urlString = page as String
             println(urlString)
         }
+        
+        self.refreshControl.endRefreshing()
     }
     
     override func viewWillAppear(animated: Bool) {
