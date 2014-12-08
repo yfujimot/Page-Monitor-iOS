@@ -24,13 +24,17 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return pages.count
     }
-
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = UITableViewCell();
         
         return cell
     }
-
+    
+    func refresh() {
+        for page in pages { // Iterate and check page changes
+            println(page)
+        }
+    }
 }
 
