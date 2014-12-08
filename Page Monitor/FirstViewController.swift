@@ -41,14 +41,40 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         return cell
     }
     
-    func refresh(sender: AnyObject) {
+    func refresh(sender: AnyObject) { // Pro version will check in background then push. Free is manual..
         println("Refresh works!")
+        pagesTable?.reloadData() // Not absolutely sure if this one is necessary
+        
         for page in pages { // Iterate and check page changes. Code inspector goes in here.
-            var urlString = page as String
-            println(urlString)
+            // Initialize link information
+            var urlString = page as String // Local variable for less wasted space
+            var url = NSURL(string: urlString) // Convert string literal to NSURL
+            
+            // Task declaration
+            var task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+                
+                var urlContent = NSString(data: data, encoding: NSUTF8StringEncoding) // Fetch current http
+                println(urlContent)
+                
+                var savedData = NSUserDefaults.standardUserDefaults().valueForKey(page)
+                
+                if ((savedData as String).isEmpty) {
+                    return
+                }
+                
+                if ((savedData as String) != urlContent) {
+                    println("Page has changed!")
+                }
+                
+                NSUserDefaults.standardUserDefaults().setValue(urlContent, forKey: page) // Update current http
+                NSUserDefaults.standardUserDefaults().synchronize() // Commit
+            }
+            
+            task.resume() // Start task
         }
         
-        self.refreshControl.endRefreshing()
+        pagesTable?.reloadData()
+        self.refreshControl.endRefreshing() // End refreshing
     }
     
     override func viewWillAppear(animated: Bool) {

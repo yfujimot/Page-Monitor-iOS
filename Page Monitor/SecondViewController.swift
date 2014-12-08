@@ -18,8 +18,24 @@ class SecondViewController: UIViewController {
         println(pages)
         
         let fixedPages = pages
-        NSUserDefaults.standardUserDefaults().setValue(fixedPages, forKey: "pages")
-        NSUserDefaults.standardUserDefaults().synchronize()
+        NSUserDefaults.standardUserDefaults().setValue(fixedPages, forKey: "pages") // Save pages list
+        
+        var urlString = linkTextField.text as String // Local variable for less wasted space
+        var url = NSURL(string: urlString) // Convert string literal to NSURL
+        
+        // Task declaration
+        var task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+            
+            var urlContent = NSString(data: data, encoding: NSUTF8StringEncoding) // Fetch current http
+            println(urlContent)
+            
+            NSUserDefaults.standardUserDefaults().setValue(urlContent, forKey: self.linkTextField.text) // Initial fetch for code
+            
+        }
+        
+        task.resume() // Start task
+        
+        NSUserDefaults.standardUserDefaults().synchronize() // Execute tasks
         
         self.view.endEditing(true)
     }
