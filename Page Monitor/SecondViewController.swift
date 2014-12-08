@@ -12,9 +12,15 @@ class SecondViewController: UIViewController {
 
     @IBOutlet weak var linkTextField: UITextField!
     @IBAction func addButtonPressed(sender: AnyObject) {
-        println("Tracker added!")
-        println(linkTextField.text)
-        pages.append("taco") // Add item
+        
+        pages.append(linkTextField.text) // Add item
+        
+        println(pages)
+        
+        let fixedPages = pages
+        NSUserDefaults.standardUserDefaults().setValue(fixedPages, forKey: "pages")
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
         self.view.endEditing(true)
     }
     override func viewDidLoad() {

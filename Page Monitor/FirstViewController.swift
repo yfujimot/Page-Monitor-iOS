@@ -9,8 +9,11 @@
 import UIKit
 
 var pages:[String] = []
+
 class FirstViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
+    @IBOutlet var pagesTable:UITableView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -26,7 +29,9 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = UITableViewCell();
+        var cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "Cell")
+        
+        cell.textLabel.text = pages[indexPath.row]
         
         return cell
     }
@@ -35,6 +40,34 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         for page in pages { // Iterate and check page changes
             println(page)
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        
+        
+        if var storedToDoItems : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("pages") {
+            
+            pages = [] // Clear list
+            
+            for (var idx = 0; idx < storedToDoItems.count; idx++) {
+                pages.append(storedToDoItems[idx] as NSString)
+            }
+        }
+        
+        pagesTable?.reloadData()
+        
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        pages.removeAtIndex(indexPath.row) // Delete item
+        
+        let fixedToDoItems = pages
+        
+        NSUserDefaults.standardUserDefaults().setValue(fixedToDoItems, forKey: "pages")
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
+        pagesTable?.reloadData()
     }
 }
 
