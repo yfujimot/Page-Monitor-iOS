@@ -12,7 +12,7 @@ var pages:[String] = []
 
 class FirstViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    @IBOutlet var pagesTable:UITableView?
+    @IBOutlet var pagesTable:UITableView? // Manually created referencing outlet
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,8 +37,9 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func refresh() {
-        for page in pages { // Iterate and check page changes
-            println(page)
+        for page in pages { // Iterate and check page changes. Code inspector goes in here.
+            var urlString = page as String
+            println(urlString)
         }
     }
     
