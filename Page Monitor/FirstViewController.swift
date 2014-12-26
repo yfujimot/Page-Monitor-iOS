@@ -9,6 +9,7 @@
 import UIKit
 
 var pages:[String] = []
+var tempData:String = ""
 
 class FirstViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -53,24 +54,38 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
             // Task declaration
             var task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
                 
-                var urlContent = NSString(data: data, encoding: NSUTF8StringEncoding) // Fetch current http
+                var urlContent:String = NSString(data: data, encoding: NSUTF8StringEncoding) as String // Fetch current http
                 println(urlContent)
                 
-                var savedData = NSUserDefaults.standardUserDefaults().valueForKey(page)
+                var urlContent2 = NSString(data: data, encoding: NSUTF8StringEncoding) // Fetch current http
+                println(urlContent2)
                 
-                if ((savedData as String).isEmpty) {
-                    return
+                var savedData:String = NSUserDefaults.standardUserDefaults().valueForKey(page) as String
+                
+                
+                println("Before string isempty");
+                
+                if (savedData.isEmpty) {
+                    println("Page could not be found in dictionary")
                 }
                 
-                if ((savedData as String) != urlContent) {
+                if (tempData != urlContent) {
                     println("Page has changed!")
+                } else {
+                    println("Page has not changed..");
                 }
                 
+                /* Does not work for:
+                Github
+                */
+                
+                tempData = urlContent
                 NSUserDefaults.standardUserDefaults().setValue(urlContent, forKey: page) // Update current http
                 NSUserDefaults.standardUserDefaults().synchronize() // Commit
             }
             
             task.resume() // Start task
+            
         }
         
         pagesTable?.reloadData()
