@@ -25,7 +25,7 @@ class SecondViewController: UIViewController {
             println(pages)
         
             let fixedPages = pages
-            NSUserDefaults.standardUserDefaults().setValue(fixedPages, forKey: "pages") // Save pages list
+            // NSUserDefaults.standardUserDefaults().setValue(fixedPages, forKey: "pages") // Save pages list
         
             var urlString = linkTextField.text as String // Local variable for less wasted space
             var url = NSURL(string: urlString) // Convert string literal to NSURL
@@ -36,13 +36,41 @@ class SecondViewController: UIViewController {
                 var urlContent = NSString(data: data, encoding: NSUTF8StringEncoding) // Fetch current http
                 println(urlContent)
             
-                NSUserDefaults.standardUserDefaults().setValue(urlContent, forKey: self.linkTextField.text) // Initial fetch for code
+                // Legacy data saving using userdefaults
+                // NSUserDefaults.standardUserDefaults().setValue(urlContent, forKey: self.linkTextField.text) // Initial fetch for code
             
+                /* Save data using Parse */
+                
+//                var gameScore = PFObject(className: "Test")
+//                gameScore.setObject(1337, forKey: "score")
+//                gameScore.setObject("Sean Plott", forKey: "playerName")
+//                gameScore.saveInBackgroundWithBlock {
+//                    (success: Bool!, error: NSError!) -> Void in
+//                    if (success != nil) {
+//                        println("Object created with id: \(gameScore.objectId)")
+//                    } else {
+//                        println("%@", error)
+//                    }
+//                }
+                
+                // Test fetch
+                
+                println("Fetching");
+                
+                var query = PFQuery(className: "Test")
+                query.getObjectInBackgroundWithId("ywOtDPVpDi") {
+                    (score: PFObject!, error: NSError!) -> Void in
+                    if (error == nil) {
+                        println(score)
+                    } else {
+                        println(error)
+                    }
+                }
             }
         
             task.resume() // Start task
         
-            NSUserDefaults.standardUserDefaults().synchronize() // Execute tasks
+            // NSUserDefaults.standardUserDefaults().synchronize() // Execute tasks
         
             self.view.endEditing(true)
         
@@ -58,6 +86,10 @@ class SecondViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        // Parse init
+        
+        Parse.setApplicationId("gxvIIPDD2rlIH7zTMBJMIQmIqg0uTrVjwvpGe1Mh", clientKey: "bZXyM7l97Nmv3cXnFtVtvCMN1XAG6LyvnsgPt821")
     }
 
     override func didReceiveMemoryWarning() {
