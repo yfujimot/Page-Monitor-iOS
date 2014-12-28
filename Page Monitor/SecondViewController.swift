@@ -20,6 +20,7 @@ class SecondViewController: UIViewController {
             alertView.show();
 
         } else {
+            
             pages.append(linkTextField.text) // Add item
         
             println(pages)
@@ -28,57 +29,46 @@ class SecondViewController: UIViewController {
             // NSUserDefaults.standardUserDefaults().setValue(fixedPages, forKey: "pages") // Save pages list
         
             var urlString = linkTextField.text as String // Local variable for less wasted space
-            var url = NSURL(string: urlString) // Convert string literal to NSURL
-        
-            // Task declaration
-            var task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
+
+            let url = NSURL(string: urlString)
+            var error: NSError?
+            let html = NSString(contentsOfURL: url!, encoding: NSUTF8StringEncoding, error: &error)
             
-                var urlContent = NSString(data: data, encoding: NSUTF8StringEncoding) // Fetch current http
-                println(urlContent)
-            
-                // Legacy data saving using userdefaults
-                // NSUserDefaults.standardUserDefaults().setValue(urlContent, forKey: self.linkTextField.text) // Initial fetch for code
-            
-                /* Save data using Parse */
-                
-//                var gameScore = PFObject(className: "Test")
-//                gameScore.setObject(1337, forKey: "score")
-//                gameScore.setObject("Sean Plott", forKey: "playerName")
-//                gameScore.saveInBackgroundWithBlock {
-//                    (success: Bool!, error: NSError!) -> Void in
-//                    if (success != nil) {
-//                        println("Object created with id: \(gameScore.objectId)")
-//                    } else {
-//                        println("%@", error)
-//                    }
-//                }
-                
-                // Test fetch
-                
-                println("Fetching");
-                
-                var query = PFQuery(className: "Test")
-                query.getObjectInBackgroundWithId("ywOtDPVpDi") {
-                    (score: PFObject!, error: NSError!) -> Void in
-                    if (error == nil) {
-                        println(score)
-                    } else {
-                        println(error)
+            if (error != nil) { // May be an issue with SSL
+                println("whoops, something went wrong")
+            } else {
+                println(html!)
+            }
+            var page = PFObject(className: "Pages")
+            page.setObject(urlString, forKey: "url")
+            page.setObject(html, forKey: "html")
+            page.saveInBackgroundWithBlock {
+                (success: Bool!, error: NSError!) -> Void in
+                if (success != nil) {
+                    println("Object created with id: \(page.objectId)")
+                    var query = PFQuery(className: "Pages")
+                    query.getObjectInBackgroundWithId(page.objectId) {
+                        (score: PFObject!, error: NSError!) -> Void in
+                        if (error == nil) {
+                            println(score)
+                        } else {
+                            println(error)
+                        }
                     }
+                } else {
+                    println("%@", error)
                 }
             }
-        
-            task.resume() // Start task
         
             // NSUserDefaults.standardUserDefaults().synchronize() // Execute tasks
         
             self.view.endEditing(true)
         
-            var alertView = UIAlertView();
-            alertView.addButtonWithTitle("Got it");
-            alertView.title = "Success";
-            alertView.message = "Tracker Added!";
-            alertView.show();
+            var alertView = UIAlertView()
+            alertView.addButtonWithTitle("Got it")
+            alertView.title = "Success"
+            alertView.message = "Tracker Added!"
+            alertView.show()
             
         }
     }
