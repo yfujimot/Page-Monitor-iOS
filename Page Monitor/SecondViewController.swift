@@ -29,6 +29,14 @@ class SecondViewController: UIViewController {
             // NSUserDefaults.standardUserDefaults().setValue(fixedPages, forKey: "pages") // Save pages list
         
             var urlString = linkTextField.text as String // Local variable for less wasted space
+            
+            if !(urlString.hasPrefix("http://www.")) { // Invalid format
+                var alertView = UIAlertView()
+                alertView.addButtonWithTitle("Got it")
+                alertView.title = "Failed"
+                alertView.message = "Please enter the url in the format: http://www.google.com"
+                alertView.show()
+            } else {
 
             let url = NSURL(string: urlString)
             var error: NSError?
@@ -69,7 +77,7 @@ class SecondViewController: UIViewController {
             alertView.title = "Success"
             alertView.message = "Tracker Added!"
             alertView.show()
-            
+            }
         }
     }
     
