@@ -2,10 +2,10 @@
 
 import UIKit
 
-var str = "Hello, playground"
+let url = NSURL(string: "http://google.com/")
+//let source = NSString(contentsOfURL:url) //This way is deprecated
+let source = String(contentsOfURL: url!, encoding: NSUTF8StringEncoding, error: nil); //and this is not
 
-var str2 = ""
+println(source)
 
-if (str2.isEmpty) {
-    println("empty string")
-}
+println(source?.componentsSeparatedByString("<html>"))

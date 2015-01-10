@@ -53,35 +53,35 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             // Task declaration
             var task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
-                
-                var urlContent:String = NSString(data: data, encoding: NSUTF8StringEncoding) as String // Fetch current http
-                println(urlContent)
-                
-                var urlContent2 = NSString(data: data, encoding: NSUTF8StringEncoding) // Fetch current http
-                println(urlContent2)
-                
-                var savedData:String = NSUserDefaults.standardUserDefaults().valueForKey(page) as String
-                
-                
-                println("Before string isempty");
-                
-                if (savedData.isEmpty) {
-                    println("Page could not be found in dictionary")
-                }
-                
-                if (tempData != urlContent) {
-                    println("Page has changed!")
-                } else {
-                    println("Page has not changed..");
-                }
-                
-                /* Does not work for:
-                Github
-                */
-                
-                tempData = urlContent
-                NSUserDefaults.standardUserDefaults().setValue(urlContent, forKey: page) // Update current http
-                NSUserDefaults.standardUserDefaults().synchronize() // Commit
+//                
+//                var urlContent:String = NSString(data: data, encoding: NSUTF8StringEncoding) as String // Fetch current http
+//                println(urlContent)
+//                
+//                var urlContent2 = NSString(data: data, encoding: NSUTF8StringEncoding) // Fetch current http
+//                println(urlContent2)
+//                
+//                var savedData:String = NSUserDefaults.standardUserDefaults().valueForKey(page) as String
+//                
+//                
+//                println("Before string isempty");
+//                
+//                if (savedData.isEmpty) {
+//                    println("Page could not be found in dictionary")
+//                }
+//                
+//                if (tempData != urlContent) {
+//                    println("Page has changed!")
+//                } else {
+//                    println("Page has not changed..");
+//                }
+//                
+//                /* Does not work for:
+//                Github
+//                */
+//                
+//                tempData = urlContent
+//                NSUserDefaults.standardUserDefaults().setValue(urlContent, forKey: page) // Update current http
+//                NSUserDefaults.standardUserDefaults().synchronize() // Commit
             }
             
             task.resume() // Start task
@@ -95,16 +95,16 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
     override func viewWillAppear(animated: Bool) {
         
         
-        if var storedToDoItems : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("pages") {
-            
-            pages = [] // Clear list
-            
-            for (var idx = 0; idx < storedToDoItems.count; idx++) {
-                pages.append(storedToDoItems[idx] as NSString)
-            }
-        }
-        
-        pagesTable?.reloadData()
+//        if var storedToDoItems : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("pages") {
+//            
+//            pages = [] // Clear list
+//            
+//            for (var idx = 0; idx < storedToDoItems.count; idx++) {
+//                pages.append(storedToDoItems[idx] as NSString)
+//            }
+//        }
+//        
+//        pagesTable?.reloadData()
         
     }
     
@@ -114,8 +114,8 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         let fixedToDoItems = pages
         
-        NSUserDefaults.standardUserDefaults().setValue(fixedToDoItems, forKey: "pages")
-        NSUserDefaults.standardUserDefaults().synchronize()
+//        NSUserDefaults.standardUserDefaults().setValue(fixedToDoItems, forKey: "pages")
+//        NSUserDefaults.standardUserDefaults().synchronize()
         
         pagesTable?.reloadData()
     }

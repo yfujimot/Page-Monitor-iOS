@@ -11,6 +11,7 @@ import UIKit
 class SecondViewController: UIViewController {
 
     @IBOutlet weak var linkTextField: UITextField!
+    @IBOutlet weak var sourceView: UITextView!
     @IBAction func addButtonPressed(sender: AnyObject) {
         if ((linkTextField.text as NSString).length == 0) { // Invalid input
             var alertView = UIAlertView();
@@ -20,17 +21,9 @@ class SecondViewController: UIViewController {
             alertView.show();
 
         } else {
-            
-            pages.append(linkTextField.text) // Add item
-        
-            println(pages)
-        
-            let fixedPages = pages
-            // NSUserDefaults.standardUserDefaults().setValue(fixedPages, forKey: "pages") // Save pages list
-        
             var urlString = linkTextField.text as String // Local variable for less wasted space
             
-            if !(urlString.hasPrefix("http://www.")) { // Invalid format
+            if (!urlString.hasPrefix("http://www.")) { // Invalid format
                 var alertView = UIAlertView()
                 alertView.addButtonWithTitle("Got it")
                 alertView.title = "Failed"
@@ -38,35 +31,40 @@ class SecondViewController: UIViewController {
                 alertView.show()
             } else {
 
-            let url = NSURL(string: urlString)
-            var error: NSError?
-            let html = NSString(contentsOfURL: url!, encoding: NSUTF8StringEncoding, error: &error)
-            
-            if (error != nil) { // May be an issue with SSL
-                println("whoops, something went wrong")
-            } else {
-                println(html!)
-            }
-            var page = PFObject(className: "Pages")
-            page.setObject(urlString, forKey: "url")
-            page.setObject(html, forKey: "html")
-            page.saveInBackgroundWithBlock {
-                (success: Bool!, error: NSError!) -> Void in
-                if (success != nil) {
-                    println("Object created with id: \(page.objectId)")
-                    var query = PFQuery(className: "Pages")
-                    query.getObjectInBackgroundWithId(page.objectId) {
-                        (score: PFObject!, error: NSError!) -> Void in
-                        if (error == nil) {
-                            println(score)
-                        } else {
-                            println(error)
-                        }
-                    }
+                pages.append(linkTextField.text) // Add item
+                
+                println(pages)
+
+                let url = NSURL(string: urlString)
+                let source = String(contentsOfURL: url!, encoding: NSUTF8StringEncoding, error: nil);
+                println(source)
+                sourceView.text = source
+                if (source?.rangeOfString("FailureMode=1") != nil) {
+                    println("Query failed")
                 } else {
-                    println("%@", error)
+                    println("Valid query")
                 }
-            }
+                
+//            var page = PFObject(className: "Pages")
+//            page.setObject(urlString, forKey: "url")
+//            page.setObject(html, forKey: "html")
+//            page.saveInBackgroundWithBlock {
+//                (success: Bool!, error: NSError!) -> Void in
+//                if (success != nil) {
+//                    println("Object created with id: \(page.objectId)")
+//                    var query = PFQuery(className: "Pages")
+//                    query.getObjectInBackgroundWithId(page.objectId) {
+//                        (score: PFObject!, error: NSError!) -> Void in
+//                        if (error == nil) {
+//                            println(score)
+//                        } else {
+//                            println(error)
+//                        }
+//                    }
+//                } else {
+//                    println("%@", error)
+//                }
+//            }
         
             // NSUserDefaults.standardUserDefaults().synchronize() // Execute tasks
         
@@ -77,6 +75,8 @@ class SecondViewController: UIViewController {
             alertView.title = "Success"
             alertView.message = "Tracker Added!"
             alertView.show()
+                
+            // self.performSegueWithIdentifier("FirstViewController", sender: self) // Switch back to list
             }
         }
     }
@@ -87,7 +87,7 @@ class SecondViewController: UIViewController {
         
         // Parse init
         
-        Parse.setApplicationId("gxvIIPDD2rlIH7zTMBJMIQmIqg0uTrVjwvpGe1Mh", clientKey: "bZXyM7l97Nmv3cXnFtVtvCMN1XAG6LyvnsgPt821")
+        // Parse.setApplicationId("gxvIIPDD2rlIH7zTMBJMIQmIqg0uTrVjwvpGe1Mh", clientKey: "bZXyM7l97Nmv3cXnFtVtvCMN1XAG6LyvnsgPt821")
     }
 
     override func didReceiveMemoryWarning() {
