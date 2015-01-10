@@ -23,7 +23,7 @@ class SecondViewController: UIViewController {
         } else {
             var urlString = linkTextField.text as String // Local variable for less wasted space
             
-            if (!urlString.hasPrefix("http://www.")) { // Invalid format
+            if !(urlString.hasPrefix("http://www.")) { // Invalid format
                 var alertView = UIAlertView()
                 alertView.addButtonWithTitle("Got it")
                 alertView.title = "Failed"
@@ -39,44 +39,47 @@ class SecondViewController: UIViewController {
                 let source = String(contentsOfURL: url!, encoding: NSUTF8StringEncoding, error: nil);
                 println(source)
                 sourceView.text = source
+                
                 if (source?.rangeOfString("FailureMode=1") != nil) {
                     println("Query failed")
                 } else {
                     println("Valid query")
                 }
                 
-//            var page = PFObject(className: "Pages")
-//            page.setObject(urlString, forKey: "url")
-//            page.setObject(html, forKey: "html")
-//            page.saveInBackgroundWithBlock {
-//                (success: Bool!, error: NSError!) -> Void in
-//                if (success != nil) {
-//                    println("Object created with id: \(page.objectId)")
-//                    var query = PFQuery(className: "Pages")
-//                    query.getObjectInBackgroundWithId(page.objectId) {
-//                        (score: PFObject!, error: NSError!) -> Void in
-//                        if (error == nil) {
-//                            println(score)
-//                        } else {
-//                            println(error)
-//                        }
-//                    }
-//                } else {
-//                    println("%@", error)
-//                }
-//            }
-        
-            // NSUserDefaults.standardUserDefaults().synchronize() // Execute tasks
-        
-            self.view.endEditing(true)
-        
-            var alertView = UIAlertView()
-            alertView.addButtonWithTitle("Got it")
-            alertView.title = "Success"
-            alertView.message = "Tracker Added!"
-            alertView.show()
+                /* Upload to Parse */
+                var page = PFObject(className: "Pages")
+                page.setObject(urlString, forKey: "url")
+                page.setObject(source, forKey: "html")
+                page.saveInBackgroundWithBlock {
+                    (success: Bool!, error: NSError!) -> Void in
+                    if (success != nil) {
+                        println("Object created with id: \(page.objectId)")
+                        var query = PFQuery(className: "Pages")
+                        query.getObjectInBackgroundWithId(page.objectId) {
+                            (score: PFObject!, error: NSError!) -> Void in
+                            if (error == nil) {
+                                println(score)
+                            } else {
+                                println(error)
+                            }
+                        }
+                    } else {
+                        println("%@", error)
+                    }
+                }
                 
-            // self.performSegueWithIdentifier("FirstViewController", sender: self) // Switch back to list
+                self.view.endEditing(true)
+            
+                var alertView = UIAlertView()
+                alertView.addButtonWithTitle("Got it")
+                alertView.title = "Success"
+                alertView.message = "Tracker Added!"
+                alertView.show()
+                
+                if let tabBarController = self.sourceView.window!.rootViewController as? UITabBarController {
+                    tabBarController.selectedIndex = 0 // Return to table view after success
+                }
+                
             }
         }
     }
@@ -87,7 +90,7 @@ class SecondViewController: UIViewController {
         
         // Parse init
         
-        // Parse.setApplicationId("gxvIIPDD2rlIH7zTMBJMIQmIqg0uTrVjwvpGe1Mh", clientKey: "bZXyM7l97Nmv3cXnFtVtvCMN1XAG6LyvnsgPt821")
+        Parse.setApplicationId("gxvIIPDD2rlIH7zTMBJMIQmIqg0uTrVjwvpGe1Mh", clientKey: "bZXyM7l97Nmv3cXnFtVtvCMN1XAG6LyvnsgPt821")
     }
 
     override func didReceiveMemoryWarning() {
