@@ -12,6 +12,7 @@ class SecondViewController: UIViewController {
 
     @IBOutlet weak var linkTextField: UITextField!
     @IBOutlet weak var sourceView: UITextView!
+    
     @IBAction func addButtonPressed(sender: AnyObject) {
         if ((linkTextField.text as NSString).length == 0) { // Invalid input
             var alertView = UIAlertView();

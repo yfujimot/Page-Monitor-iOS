@@ -14,12 +14,13 @@ var tempData:String = ""
 class FirstViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet var pagesTable:UITableView? // Manually created referencing outlet
+    
     var refreshControl:UIRefreshControl!  // An optional variable
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.refreshControl = UIRefreshControl()
+        self.refreshControl = UIRefreshControl() // Off center
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         pagesTable?.addSubview(refreshControl)
@@ -37,7 +38,7 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "Cell")
         
-        cell.textLabel.text = pages[indexPath.row]
+        cell.textLabel?.text = pages[indexPath.row]
         
         return cell
     }
@@ -46,65 +47,33 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         println("Refresh works!")
         pagesTable?.reloadData() // Not absolutely sure if this one is necessary
         
-        for page in pages { // Iterate and check page changes. Code inspector goes in here.
-            // Initialize link information
-            var urlString = page as String // Local variable for less wasted space
-            var url = NSURL(string: urlString) // Convert string literal to NSURL
+        /* Iterate through each page within current user data, fetch source and if changes detected, alert user */
+        var idx = 0
+        
+        while (idx < pages.count) {
+            println(idx)
+            let indexPath = NSIndexPath(forRow: idx, inSection: 0)
+            let cell = tableView(pagesTable!, cellForRowAtIndexPath: indexPath)
+            pagesTable?.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: UITableViewScrollPosition.None)
+            println("Current cell: \(cell.textLabel?.text)")
             
-            // Task declaration
-            var task = NSURLSession.sharedSession().dataTaskWithURL(url!) {(data, response, error) in
-//                
-//                var urlContent:String = NSString(data: data, encoding: NSUTF8StringEncoding) as String // Fetch current http
-//                println(urlContent)
-//                
-//                var urlContent2 = NSString(data: data, encoding: NSUTF8StringEncoding) // Fetch current http
-//                println(urlContent2)
-//                
-//                var savedData:String = NSUserDefaults.standardUserDefaults().valueForKey(page) as String
-//                
-//                
-//                println("Before string isempty");
-//                
-//                if (savedData.isEmpty) {
-//                    println("Page could not be found in dictionary")
-//                }
-//                
-//                if (tempData != urlContent) {
-//                    println("Page has changed!")
-//                } else {
-//                    println("Page has not changed..");
-//                }
-//                
-//                /* Does not work for:
-//                Github
-//                */
-//                
-//                tempData = urlContent
-//                NSUserDefaults.standardUserDefaults().setValue(urlContent, forKey: page) // Update current http
-//                NSUserDefaults.standardUserDefaults().synchronize() // Commit
-            }
+            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+            cell.textLabel?.text = "It worked!"
             
-            task.resume() // Start task
-            
+            cell.reloadInputViews()
+            pagesTable?.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+            pagesTable?.reloadData()
+            println("Reloaded")
+            idx++
         }
         
+        
+        /* Provide visual alert */
         pagesTable?.reloadData()
         self.refreshControl.endRefreshing() // End refreshing
     }
     
     override func viewWillAppear(animated: Bool) {
-        
-        
-//        if var storedToDoItems : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("pages") {
-//            
-//            pages = [] // Clear list
-//            
-//            for (var idx = 0; idx < storedToDoItems.count; idx++) {
-//                pages.append(storedToDoItems[idx] as NSString)
-//            }
-//        }
-//        
-//        pagesTable?.reloadData()
         
     }
     
@@ -114,10 +83,19 @@ class FirstViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         let fixedToDoItems = pages
         
-//        NSUserDefaults.standardUserDefaults().setValue(fixedToDoItems, forKey: "pages")
-//        NSUserDefaults.standardUserDefaults().synchronize()
-        
         pagesTable?.reloadData()
     }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+
+    }
+    
+    func tableView(tableView: UITableView, performAction action: Selector, forRowAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject!) {
+        let cell = pagesTable?.cellForRowAtIndexPath(indexPath)
+        cell?.textLabel?.text = "Worked"
+        
+    }
+    
+    
 }
 

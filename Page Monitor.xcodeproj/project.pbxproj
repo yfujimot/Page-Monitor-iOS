@@ -55,6 +55,7 @@
 		92374F4E1A4E88CE006C554A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		92374F5A1A4E88E1006C554A /* Page Monitor-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Page Monitor-Bridging-Header.h"; sourceTree = "<group>"; };
 		92374F5B1A4E88E1006C554A /* NSObject+BridgeHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+BridgeHeader.h"; sourceTree = "<group>"; };
+		9242613B1A60EAA8005DAB95 /* Future Iterations.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Future Iterations.playground"; sourceTree = "<group>"; };
 		92A87C9F1A3632C900D92BD9 /* Page Monitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Page Monitor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		92A87CA31A3632C900D92BD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		92A87CA41A3632C900D92BD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -142,6 +143,7 @@
 				92A87CAD1A3632C900D92BD9 /* Images.xcassets */,
 				92A87CAF1A3632C900D92BD9 /* LaunchScreen.xib */,
 				92A87CA21A3632C900D92BD9 /* Supporting Files */,
+				9242613B1A60EAA8005DAB95 /* Future Iterations.playground */,
 			);
 			path = "Page Monitor";
 			sourceTree = "<group>";
